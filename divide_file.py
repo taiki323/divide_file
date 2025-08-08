@@ -25,7 +25,7 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
     writer = None
     
     try:
-        with open(input_file, 'r', encoding='utf-8') as csvfile:
+        with open(input_file, 'r', encoding='cp932') as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)  # ヘッダー行を読み取り
             
@@ -39,7 +39,7 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
                         output_file.close()
                     
                     output_filename = os.path.join(output_dir, f"{file_count}.csv")
-                    output_file = open(output_filename, 'w', newline='', encoding='utf-8')
+                    output_file = open(output_filename, 'w', newline='', encoding='utf-8-sig')
                     writer = csv.writer(output_file)
                     writer.writerow(header)  # ヘッダーを書き込み
                     print(f"  {output_filename} を作成中...")
