@@ -13,6 +13,12 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
         print(f"エラー: {input_file} が見つかりません。")
         return
     
+    # 出力ディレクトリを作成
+    output_dir = 'divided_files'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+        print(f"ディレクトリ '{output_dir}' を作成しました。")
+    
     file_count = 1
     record_count = 0
     output_file = None
@@ -32,7 +38,7 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
                     if output_file:
                         output_file.close()
                     
-                    output_filename = f"{file_count}.csv"
+                    output_filename = os.path.join(output_dir, f"{file_count}.csv")
                     output_file = open(output_filename, 'w', newline='', encoding='utf-8')
                     writer = csv.writer(output_file)
                     writer.writerow(header)  # ヘッダーを書き込み
@@ -45,7 +51,7 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
                 # 指定件数に達した場合、次のファイルへ
                 if record_count >= records_per_file:
                     output_file.close()
-                    print(f"  {file_count}.csv 完了 ({records_per_file}件)")
+                    print(f"  {os.path.basename(output_filename)} 完了 ({records_per_file}件)")
                     file_count += 1
                     record_count = 0
                     output_file = None
@@ -53,9 +59,9 @@ def divide_csv_file(input_file='origin.csv', records_per_file=1000):
         # 最後のファイルがまだ開いている場合は閉じる
         if output_file:
             output_file.close()
-            print(f"  {file_count}.csv 完了 ({record_count}件)")
+            print(f"  {os.path.basename(output_filename)} 完了 ({record_count}件)")
         
-        print(f"\n分割完了: {file_count}個のファイルを作成しました")
+        print(f"\n分割完了: {file_count}個のファイルを'{output_dir}'ディレクトリに作成しました")
         
     except FileNotFoundError:
         print(f"エラー: {input_file} が見つかりません。")
